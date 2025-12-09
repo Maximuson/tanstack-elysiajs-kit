@@ -9,7 +9,7 @@ async function fetchServerInfo(): Promise<{
 }> {
   const startTime = performance.now();
   try {
-    const response = await api.api.info.get();
+    const response = await api.info.get();
     const duration = Math.round(performance.now() - startTime);
     return { data: response.data || null, duration };
   } catch (error) {

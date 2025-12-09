@@ -13,7 +13,7 @@ import { FEATURES, NEXT_STEPS } from "../constants/homePageData";
 // Loader to prefetch server info on SSR
 async function getServerInfo(): Promise<ServerInfoDTO | null> {
   try {
-    const response = await api.api.info.get();
+    const response = await api.info.get();
 
     if (response.data?.ssr) {
       return response.data;
