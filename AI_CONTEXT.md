@@ -38,6 +38,7 @@ tanstack-elysiajs-kit/
 Each feature is organized as a vertical slice with three layers:
 
 #### Feature Structure
+
 ```
 src/
   {feature-name}/
@@ -49,26 +50,30 @@ src/
 #### Current Features
 
 **Server Info** (`src/server-info/`):
+
 - **Domain**: `ServerInfoService` - Collects server runtime information
 - **Application**: `GetServerInfo` - Use case for retrieving server info
 - **Infrastructure**: `ServerInfoController` - HTTP endpoint at `/api/info`
 
 **User** (`src/user/`):
-- **Domain**: 
+
+- **Domain**:
   - `User` entity
   - `UserEmail` value object with validation
   - `UserRepository` interface
 - **Application**: `CreateUser` use case
-- **Infrastructure**: 
+- **Infrastructure**:
   - `UserRepositoryImpl` (in-memory)
   - `UserController` - HTTP endpoint at `/api/users`
 
 #### Key Files
+
 - `src/index.ts` - Main server entry point, aggregates all feature controllers
 - `package.json` - Backend dependencies (Elysia, @elysiajs/cors, shared-types)
 - `tsconfig.json` - TypeScript config with Bun types
 
 #### Runtime
+
 - **Runs on**: Bun (native performance)
 - **Port**: 4000
 - **CORS**: Configured for frontend at localhost:3000
@@ -78,22 +83,25 @@ src/
 **Location**: `apps/frontend/`
 
 **Key Components**:
+
 - **Routes**: File-based routing in `src/routes/`
 - **API Client**: `src/lib/api-client.ts` - Eden Treaty client for type-safe API calls
 - **Layout**: `src/routes/__root.tsx` - Global HTML shell and header
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin
 
 **API Integration**:
+
 - Uses **Eden Treaty** to consume backend API with full type safety
 - API client imports backend `App` type for autocomplete
 - Environment variable `VITE_API_URL` configures backend URL
 
 **Example Usage**:
+
 ```typescript
-import { api } from '../lib/api-client';
+import { api } from "../lib/api-client";
 
 // Type-safe API call
-const response = await api.api.info.get();
+const response = await api.info.get();
 ```
 
 ### 3. Shared Types Package
@@ -103,6 +111,7 @@ const response = await api.api.info.get();
 **Purpose**: Centralized type definitions shared between backend and frontend
 
 **Organization**: Feature-based structure matching backend features
+
 ```
 src/
   server-info/
@@ -114,6 +123,7 @@ src/
 ```
 
 **Usage**:
+
 - Backend: `import type { UserDTO } from "@repo/shared-types"`
 - Frontend: `import type { ServerInfoDTO } from "@repo/shared-types"`
 - E2E Tests: `import type { CreateUserDTO } from "@repo/shared-types"`
@@ -123,16 +133,19 @@ src/
 **Location**: `apps/e2e/`
 
 **Features**:
+
 - Auto-starts backend and frontend servers before tests
 - Multi-browser testing (Chrome, Firefox, Safari)
 - Type-safe assertions using shared types
 - CI/CD integration with GitHub Actions
 
 **Test Files**:
+
 - `tests/server-info.spec.ts` - Server info feature tests
 - `tests/user.spec.ts` - User creation and validation tests
 
 **Configuration**:
+
 - `playwright.config.ts` - Playwright configuration
 - `.github/workflows/e2e.yml` - CI/CD workflow
 
@@ -198,9 +211,11 @@ bun run build
 ## API Endpoints
 
 ### Server Info
+
 - **GET** `/api/info` - Returns server runtime information (Bun version, platform, memory)
 
 ### User Management
+
 - **POST** `/api/users` - Create a new user
   - Body: `{ email: string, name: string }`
   - Validation: Email format via `UserEmail` value object
@@ -208,6 +223,7 @@ bun run build
 ## Important Notes for AI Agents
 
 ### Backend Development
+
 - **Feature-based DDD**: When adding new features, create a new directory under `apps/backend/src/` with `domain/`, `application/`, and `infrastructure/` subdirectories
 - **Domain Layer**: Contains entities, value objects, and repository interfaces (no external dependencies)
 - **Application Layer**: Contains use cases that orchestrate domain logic
@@ -215,16 +231,19 @@ bun run build
 - **Type Safety**: Always import DTOs from `@repo/shared-types`
 
 ### Frontend Development
+
 - **API Calls**: Use the Eden Treaty client from `src/lib/api-client.ts` for type-safe API calls
 - **Shared Types**: Import DTOs from `@repo/shared-types` for consistency
 - **Environment**: API URL is configured via `VITE_API_URL` in `.env.development`
 
 ### Testing
+
 - **E2E Tests**: Add new test files in `apps/e2e/tests/` following the pattern of existing tests
 - **Type Safety**: Use shared types for test assertions
 - **Auto-start**: Playwright config automatically starts backend and frontend servers
 
 ### Type Definitions
+
 - **Shared Types**: Add new DTOs in `packages/shared-types/src/` organized by feature
 - **Export**: Update `packages/shared-types/src/index.ts` to export new types
 

@@ -206,7 +206,7 @@ const app = new Elysia()
 import { api } from "../lib/api-client";
 import type { MyFeatureDTO } from "@repo/shared-types";
 
-const data = await api.api["my-feature"].get();
+const data = await api["my-feature"].get();
 ```
 
 ### 5. Add E2E Tests
