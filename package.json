@@ -11,7 +11,10 @@
     "dev:backend": "bun run --filter backend dev",
     "build": "bun run --filter '*' build",
     "types": "bun run --filter shared-types build",
-    "test:e2e": "bun run --filter e2e test"
+    "test:e2e": "bun run --filter e2e test",
+    "start": "bun run --filter '*' start",
+    "start:frontend": "bun run --filter frontend start",
+    "start:backend": "bun run --filter backend start"
   },
   "overrides": {
     "vite": "^7.1.7"
