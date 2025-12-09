@@ -67,7 +67,10 @@ export function ServerStatusCard({
   }
 
   return (
-    <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-cyan-500/30 rounded-xl p-6 shadow-xl shadow-cyan-500/10">
+    <div
+      data-test="server-status-card"
+      className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-cyan-500/30 rounded-xl p-6 shadow-xl shadow-cyan-500/10"
+    >
       <div className="flex items-center gap-3 mb-6 flex-wrap">
         <div className="p-2 bg-cyan-500/10 rounded-lg">
           <Server className="w-6 h-6 text-cyan-400" />
