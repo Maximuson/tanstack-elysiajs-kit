@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-- **Name**: tanstack-elysiajs-learn
+- **Name**: tanstack-elysiajs-kit
 - **Description**: A monorepo combining TanStack Start (full-stack React framework) with a standalone ElysiaJS backend running on Bun, featuring feature-based DDD architecture and E2E testing.
 - **Architecture**: Monorepo with Bun workspaces
 - **Tech Stack**:
@@ -20,7 +20,7 @@
 The project uses **Bun workspaces** to manage multiple packages:
 
 ```
-tanstack-elysiajs-learn/
+tanstack-elysiajs-kit/
 ├── apps/
 │   ├── backend/          # Elysia API on Bun
 │   ├── frontend/         # TanStack Start app

@@ -27,4 +27,5 @@ export interface ServerInfoDTO {
     typeSystem: string;
   };
   timestamp: string;
+  ssr: boolean;
 }

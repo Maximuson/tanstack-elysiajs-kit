@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-elysiajs-learn",
+  "name": "tanstack-elysiajs-kit",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -12,5 +12,11 @@
     "build": "bun run --filter '*' build",
     "types": "bun run --filter shared-types build",
     "test:e2e": "bun run --filter e2e test"
+  },
+  "overrides": {
+    "vite": "^7.1.7"
+  },
+  "resolutions": {
+    "vite": "^7.1.7"
   }
 }

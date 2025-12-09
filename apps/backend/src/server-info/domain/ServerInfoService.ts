@@ -35,6 +35,7 @@ export class ServerInfoService {
         typeSystem: "Eden Treaty",
       },
       timestamp: new Date().toISOString(),
+      ssr: true,
     };
   }
 }

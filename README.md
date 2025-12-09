@@ -12,7 +12,7 @@ A modern full-stack application with separated backend and frontend, featuring:
 This is a **monorepo** using Bun workspaces:
 
 ```
-tanstack-elysiajs-learn/
+tanstack-elysiajs-kit/
 ├── apps/
 │   ├── backend/          # Elysia API on Bun (port 4000)
 │   ├── frontend/         # TanStack Start (port 3000)
