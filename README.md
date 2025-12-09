@@ -1,290 +1,258 @@
-Welcome to your new TanStack app! 
+# TanStack Start + Elysia Monorepo
 
-# Getting Started
+A modern full-stack application with separated backend and frontend, featuring:
 
-To run this application:
+- **Backend**: Elysia API on Bun with feature-based DDD architecture
+- **Frontend**: TanStack Start with type-safe API integration
+- **Shared Types**: End-to-end type safety
+- **E2E Testing**: Playwright with multi-browser support
+
+## Architecture
+
+This is a **monorepo** using Bun workspaces:
+
+```
+tanstack-elysiajs-learn/
+├── apps/
+│   ├── backend/          # Elysia API on Bun (port 4000)
+│   ├── frontend/         # TanStack Start (port 3000)
+│   └── e2e/              # Playwright E2E tests
+└── packages/
+    └── shared-types/     # Shared TypeScript types
+```
+
+### Backend (Feature-Based DDD)
+
+Each feature follows Domain-Driven Design with three layers:
+
+- **Domain**: Entities, value objects, repository interfaces
+- **Application**: Use cases, business logic orchestration
+- **Infrastructure**: HTTP controllers, repository implementations
+
+**Current Features**:
+
+- `server-info/` - Server runtime information
+- `user/` - User management with email validation
+
+### Frontend (TanStack Start)
+
+- File-based routing with TanStack Router
+- Eden Treaty client for type-safe API calls
+- Tailwind CSS v4 for styling
+
+### Shared Types
+
+Feature-based type definitions shared between backend and frontend:
+
+- `server-info/ServerInfoDTO.ts`
+- `user/UserDTO.ts`, `CreateUserDTO.ts`
+
+## Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh) installed
+
+### Installation
 
 ```bash
+# Install all dependencies
 bun install
-bun --bun run start
+
+# Install Playwright browsers (first time only)
+cd apps/e2e
+bunx playwright install
+cd ../..
 ```
 
-# Building For Production
-
-To build this application for production:
+### Development
 
 ```bash
-bun --bun run build
+# Start both backend and frontend concurrently
+bun run dev
+
+# Or start individually:
+bun run dev:backend   # Backend on port 4000
+bun run dev:frontend  # Frontend on port 3000
 ```
 
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### Testing
 
 ```bash
-bun --bun run test
+# Run E2E tests (auto-starts servers)
+cd apps/e2e
+bun run test
+
+# Run with UI mode
+bun run test:ui
+
+# Run in headed mode (see browser)
+bun run test:headed
+
+# Debug specific test
+bun run test:debug tests/server-info.spec.ts
+
+# View test report
+bun run report
 ```
 
-## Styling
+### Building for Production
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```bash
+# Build all packages
+bun run build
 ```
 
-Then anywhere in your JSX you can use it like so:
+## API Endpoints
 
-```tsx
-<Link to="/about">About</Link>
+### Server Info
+
+- **GET** `/api/info` - Returns server runtime information
+  - Bun version, platform details, memory usage, uptime
+
+### User Management
+
+- **POST** `/api/users` - Create a new user
+  - Body: `{ email: string, name: string }`
+  - Validates email format
+  - Returns: `UserDTO` with ID and timestamp
+
+## Project Structure
+
+### Backend (`apps/backend/`)
+
+```
+src/
+  server-info/
+    domain/              # ServerInfoService
+    application/         # GetServerInfo use case
+    infrastructure/      # ServerInfoController
+  user/
+    domain/              # User entity, UserEmail value object, UserRepository
+    application/         # CreateUser use case
+    infrastructure/      # UserController, UserRepositoryImpl
+  shared/                # Shared utilities
+  index.ts               # Server entry point
 ```
 
-This will create a link that will navigate to the `/about` route.
+### Frontend (`apps/frontend/`)
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
+```
+src/
+  routes/                # TanStack Router file-based routes
+  components/            # Reusable UI components
+  lib/
+    api-client.ts        # Eden Treaty client
+  styles.css             # Global styles
 ```
 
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
+### E2E Tests (`apps/e2e/`)
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+```
+tests/
+  server-info.spec.ts    # Server info feature tests
+  user.spec.ts           # User creation and validation tests
+playwright.config.ts     # Playwright configuration
+```
 
+## Adding New Features
 
-## Data Fetching
+### 1. Create Shared Types
 
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+```typescript
+// packages/shared-types/src/my-feature/MyFeatureDTO.ts
+export interface MyFeatureDTO {
+  id: string;
+  name: string;
+}
 
-For example:
+// packages/shared-types/src/index.ts
+export * from "./my-feature/MyFeatureDTO";
+```
 
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
+### 2. Create Backend Feature
+
+```
+apps/backend/src/my-feature/
+  domain/
+    MyFeature.ts         # Entity
+    MyFeatureRepository.ts
+  application/
+    CreateMyFeature.ts   # Use case
+  infrastructure/
+    MyFeatureController.ts
+    MyFeatureRepositoryImpl.ts
+```
+
+### 3. Register Controller
+
+```typescript
+// apps/backend/src/index.ts
+import { myFeatureController } from "./my-feature/infrastructure/MyFeatureController";
+
+const app = new Elysia()
+  // ...
+  .group(
+    "/api",
+    (app) =>
+      app.use(serverInfoController).use(userController).use(myFeatureController) // Add here
+  );
+```
+
+### 4. Use in Frontend
+
+```typescript
+// apps/frontend/src/routes/my-route.tsx
+import { api } from "../lib/api-client";
+import type { MyFeatureDTO } from "@repo/shared-types";
+
+const data = await api.api["my-feature"].get();
+```
+
+### 5. Add E2E Tests
+
+```typescript
+// apps/e2e/tests/my-feature.spec.ts
+import { test, expect } from "@playwright/test";
+import type { MyFeatureDTO } from "@repo/shared-types";
+
+test("should fetch my feature", async ({ request }) => {
+  const response = await request.get("http://localhost:4000/api/my-feature");
+  expect(response.ok()).toBeTruthy();
 });
 ```
 
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
+## Technology Stack
 
-### React-Query
+- **Backend Runtime**: Bun
+- **Backend Framework**: ElysiaJS
+- **Frontend Framework**: React 19 + TanStack Start
+- **Router**: TanStack Router (file-based)
+- **Styling**: Tailwind CSS v4
+- **Type Safety**: TypeScript + Eden Treaty
+- **Testing**: Playwright
+- **Package Manager**: Bun
+- **Monorepo**: Bun workspaces
 
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
+## Key Features
 
-First add your dependencies:
+✅ **Feature-Based DDD** - Modular, self-contained features  
+✅ **Type Safety** - End-to-end type safety with shared types  
+✅ **Bun Runtime** - Maximum performance for backend  
+✅ **Eden Treaty** - Type-safe API client with autocomplete  
+✅ **E2E Testing** - Comprehensive testing with Playwright  
+✅ **Monorepo** - Single repository for easy refactoring  
+✅ **Hot Reload** - Fast development with watch mode
 
-```bash
-bun install @tanstack/react-query @tanstack/react-query-devtools
-```
+## Learn More
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+- [TanStack Start](https://tanstack.com/start)
+- [TanStack Router](https://tanstack.com/router)
+- [ElysiaJS](https://elysiajs.com)
+- [Bun](https://bun.sh)
+- [Playwright](https://playwright.dev)
+- [Tailwind CSS](https://tailwindcss.com)
 
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+## License
 
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-bun install @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+MIT

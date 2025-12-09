@@ -1,13 +1,30 @@
+# Dependencies
 node_modules
-.DS_Store
+bun.lock
+
+# Build outputs
 dist
 dist-ssr
-*.local
-count.txt
-.env
-.nitro
-.tanstack
-.wrangler
 .output
+.nitro
 .vinxi
+.wrangler
+
+# Development
+.DS_Store
+*.local
+.env
+.tanstack
+
+# Testing
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Data files
+count.txt
 todos.json
+
+# IDE
+.vscode
+.idea
